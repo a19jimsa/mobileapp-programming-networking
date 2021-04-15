@@ -1,7 +1,7 @@
 
 # Rapport
 
-**Assignemtn 5 - Networking**
+**Assignment 6 - Networking**
 
 Uppgiften gick ut på att skapa en applikation som hämtar JSON-data och göra om detta till objekt i Java och skriva ut informationen. För att göra detta krävs det att appen kan hämta data från nätet. Vilket sker genom att man ger den permission till internet. URL:en man fick är en array därför krävs det göra en parse av arrayen med hjälp av Java. 
 ```Java
