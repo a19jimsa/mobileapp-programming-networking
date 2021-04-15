@@ -27,7 +27,7 @@ Alla berg läggs i en arrayList som är kopplad till en adapterArray för att ku
 
 Så här ser det ut:
 
-BILD
+<img src="app1.png" width="300" />
 
 Klickar man på något av bergen i listan kommer man till en ny activity som visar det berget man klickat på med lite mer information. Även en knapp finns så man kan återgå till förra activity sidan.
 
@@ -56,9 +56,9 @@ Klickar man på något av bergen i listan kommer man till en ny activity som vis
  intent.putExtra("location", mountain.getLocation());
  startActivity(intent);
 ```
-adapte.getItem är det objektet man klickat på i listan som befinner sig på den positionen och mountain är en referens av det objektet och hämtar utt dess information med egenskapade getter funktioner. Som sedan skickas till secondActivity.
+adapter.getItem(position) returnerar objektet man klickat på i listan som befinner sig på den positionen och mountain är en referens av det objektet och hämtar utt dess information med egenskapade getter funktioner. Som sedan skickas till secondActivity.
 
 Det ser ut så här:
 
-BILD
+<img src="app2.png" width="300" />
 
