@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mountains = new ArrayList<Mountain>();
         mountains.add(new Mountain("Berg", 1200));
         mountains.add(new Mountain("Berg", 1200));
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         my_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Hejsan", Toast.LENGTH_SHORT).show();
+                new JsonTask().execute("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
             }
         });
 
