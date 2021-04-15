@@ -3,6 +3,7 @@ package com.example.networking;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,11 +42,15 @@ public class MainActivity extends AppCompatActivity {
         my_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Mountain mountain = adapter.getItem(position);
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra("name", mountain.getName());
+                intent.putExtra("height", mountain.getHeight());
+                intent.putExtra("location", mountain.getLocation());
+                startActivity(intent);
             }
         });
         new JsonTask().execute("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
-
     }
     @SuppressLint("StaticFieldLeak")
     private class JsonTask extends AsyncTask<String, String, String> {
@@ -91,13 +96,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String json) {
             Log.d("TAG", json.toString());
             try {
-            // Ditt JSON-objekt som Java
+                // Ditt JSON-objekt som Java
                 JSONArray jsonarray = new JSONArray(json);
                 for(int i = 0; i < jsonarray.length(); i++){
                     JSONObject jsonObject = jsonarray.getJSONObject(i);
                     String name = jsonObject.getString("name");
                     int height = jsonObject.getInt("size");
-                    mountains.add(new Mountain(name, height));
+                    String location = jsonObject.getString("location");
+                    mountains.add(new Mountain(name, height, location));
                     adapter.notifyDataSetChanged();
                 }
 
