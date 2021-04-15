@@ -1,42 +1,64 @@
 
 # Rapport
 
-**Skriv din rapport här!**
+**Assignemtn 5 - Networking**
 
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
-
+Uppgiften gick ut på att skapa en applikation som hämtar JSON-data och göra om detta till objekt i Java och skriva ut informationen. För att göra detta krävs det att appen kan hämta data från nätet. Vilket sker genom att man ger den permission till internet. URL:en man fick är en array därför krävs det göra en parse av arrayen med hjälp av Java. 
+```Java
+try {
+        // Ditt JSON-objekt som Java
+        JSONArray jsonarray = new JSONArray(json);
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+Strängen som hämtas från URL:en består av en array. Därför måste arrayen göras till ett JSON objekt för att hämta ut datan. Därför måste arrayen itereras med en for-loop t ex. För att lagra värderna i variabler eller objekt i detta fallet av klassen Mountain.
+
+```Java
+  for(int i = 0; i < jsonarray.length(); i++){
+    JSONObject jsonObject = jsonarray.getJSONObject(i);
+    String name = jsonObject.getString("name");
+    int height = jsonObject.getInt("size");
+    String location = jsonObject.getString("location");
+    mountains.add(new Mountain(name, height, location));
+    adapter.notifyDataSetChanged();
     }
-}
 ```
+Här skapas nya objekt av Mountain med namn, höjd och var berget är.
 
-Bilder läggs i samma mapp som markdown-filen.
+Alla berg läggs i en arrayList som är kopplad till en adapterArray för att kunna rita ut de i en ListView. När all data hämtats och lagts i olika objekt så körs en uppdatering så alla berg ritas ut i ListView.
 
-![](android.png)
+Så här ser det ut:
 
-Läs gärna:
+<img src="app1.png" width="300" />
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+Klickar man på något av bergen i listan kommer man till en ny activity som visar det berget man klickat på med lite mer information. Även en knapp finns så man kan återgå till förra activity sidan.
+
+```Java
+  String name = extras.getString("name");
+  int height = extras.getInt("height");
+  String location = extras.getString("location");
+  // Do something with the name and number
+  Log.d("a19jimsa", name+height+location);
+  TextView nameView = findViewById(R.id.textView_name);
+  nameView.setText("Name: " + name);
+  TextView heightView = findViewById(R.id.textView_height);
+  heightView.setText("Height: "+height);
+  TextView locationView = findViewById(R.id.textView_location);
+  locationView.setText("Location: "+location);
+  }
+  Button button = findViewById(R.id.back_button);
+ ```
+ Här skickas värden över beroende på det berg man klickat på. Och sätts till respektive TextView och skriver ut information om berget.
+ 
+ ```Java
+ Mountain mountain = adapter.getItem(position);
+ Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+ intent.putExtra("name", mountain.getName());
+ intent.putExtra("height", mountain.getHeight());
+ intent.putExtra("location", mountain.getLocation());
+ startActivity(intent);
+```
+adapter.getItem(position) returnerar objektet man klickat på i listan som befinner sig på den positionen och mountain är en referens av det objektet och hämtar utt dess information med egenskapade getter funktioner. Som sedan skickas till secondActivity.
+
+Det ser ut så här:
+
+<img src="app2.png" width="300" />
+
