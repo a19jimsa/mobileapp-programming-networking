@@ -12,6 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,18 +35,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mountains = new ArrayList<Mountain>();
-        mountains.add(new Mountain("Berg", 1200));
-        mountains.add(new Mountain("Berg", 1200));
-        mountains.add(new Mountain("Berg", 1200));
         adapter = new ArrayAdapter<Mountain>(this, R.layout.list_item_textview,R.id.list_item_text, mountains);
         ListView my_listView = findViewById(R.id.my_listView);
         my_listView.setAdapter(adapter);
         my_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new JsonTask().execute("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
+
             }
         });
+        new JsonTask().execute("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
 
     }
     @SuppressLint("StaticFieldLeak")
@@ -86,9 +89,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String json) {
-            Log.d("TAG", json);
+            Log.d("TAG", json.toString());
+            try {
+            // Ditt JSON-objekt som Java
+                JSONArray jsonarray = new JSONArray(json);
+                for(int i = 0; i < jsonarray.length(); i++){
+                    JSONObject jsonObject = jsonarray.getJSONObject(i);
+                    String name = jsonObject.getString("name");
+                    int height = jsonObject.getInt("size");
+                    mountains.add(new Mountain(name, height));
+                    adapter.notifyDataSetChanged();
+                }
+
+            } catch (JSONException e) {
+                Log.e("brom","E:"+e.getMessage());
+            }
         }
     }
-
 }
 
